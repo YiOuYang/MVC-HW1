@@ -19,7 +19,7 @@ namespace MVC5Course.Models
 
         public IQueryable Sort(string Field, string Type)
         {
-            var param = Expression.Parameter(typeof(客戶資料), "x");
+            var param = Expression.Parameter(typeof(客戶資料), "");
             var orderExpression = Expression.Lambda<Func<客戶資料, object>>(Expression.Property(param, Field), param);
             if (Type=="Desc")
             {
