@@ -1,4 +1,6 @@
-﻿@model IEnumerable<MVC5Course.Models.客戶資料>
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@model IEnumerable<MVC5Course.Models.客戶資料>
 
 @{
     ViewBag.Title = "Index";
@@ -21,7 +23,7 @@
 <p>
     @using (Html.BeginForm("Filter", "客戶資料", FormMethod.Get, null))
     {
-                @Html.DropDownList("客戶分類", null, "請選擇", htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("客戶分類", null, "請選擇", htmlAttributes: new { @class = "form-control" })
         <input type="submit" />
     }
 </p>
@@ -33,71 +35,73 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.客戶名稱)
-            @Html.ActionLink("Desc", "FieldSort", new {Field= "客戶名稱", type = "Desc"})
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "客戶名稱", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "客戶名稱", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "客戶名稱", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.統一編號)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "統一編號", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "統一編號", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "統一編號", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "統一編號", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.電話)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "電話", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "電話", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "電話", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "電話", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.傳真)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "傳真", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "傳真", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "傳真", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "傳真", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.地址)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "地址", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "地址", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "地址", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "地址", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "Email", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "Email", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "Email", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "Email", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.客戶分類)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "客戶分類", type = "Desc" })
-            @Html.ActionLink("Asc", "FieldSort", new { Field = "客戶分類", type = "Asc" })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "客戶分類", type = "Desc", page = ViewBag.CurrPage })
+            @Html.ActionLink("Asc", "FieldSort", new { Field = "客戶分類", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.客戶名稱)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.統一編號)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.電話)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.傳真)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.地址)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.客戶分類 )
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.客戶名稱)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.統一編號)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.電話)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.傳真)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.地址)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.客戶分類)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, ViewBag.CurrPage }))

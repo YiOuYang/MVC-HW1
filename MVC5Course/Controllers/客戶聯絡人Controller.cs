@@ -2,40 +2,142 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MVC5Course.Models;
+using X.PagedList;
 
 namespace MVC5Course.Controllers
 {
     public class 客戶聯絡人Controller : Controller
     {
-        //private 客戶資料Entities db = new 客戶資料Entities();
+        private 客戶資料Entities db = new 客戶資料Entities();
         客戶聯絡人Repository repo = RepositoryHelper.Get客戶聯絡人Repository();
+        private int pageSize = 5;
 
-        public ActionResult FieldSort(string field, string type)
+        public List<客戶聯絡人> GetTitles()
         {
-            var Contact = repo.Sort(field, type);
+            List<客戶聯絡人> _Title = new List<客戶聯絡人>();
+            var queryA =
+                (from o in db.客戶聯絡人
+                 orderby o.職稱
+                 select o.職稱).Distinct();
+
+            foreach (string c in queryA)
+            {
+                _Title.Add(new 客戶聯絡人 { 職稱 = c.ToString() });
+            }
+            return _Title;
+        }
+
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult FieldSort(string field, string type, int? Page)
+        {
+            //var Contact = repo.Sort(field, type);
             var ClientFilter = RepositoryHelper.Get客戶聯絡人Repository();
             ViewBag.職稱 = new SelectList(ClientFilter.All().Distinct(), "職稱", "職稱");
-            return View("Index", Contact);
+           //return View("Index", Contact);
+
+
+            var Contact = repo.All();
+
+            switch (field)
+            {
+                case "職稱":
+                    if (type == "Desc")
+                    {
+                        Contact = Contact.OrderByDescending(s => s.職稱);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Contact = Contact.OrderBy(s => s.職稱);
+                    }
+
+                    break;
+                case "姓名":
+                    if (type == "Desc")
+                    {
+                        Contact = Contact.OrderByDescending(s => s.姓名);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Contact = Contact.OrderBy(s => s.姓名);
+                    }
+
+                    break;
+                case "Email":
+                    if (type == "Desc")
+                    {
+                        Contact = Contact.OrderByDescending(s => s.Email);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Contact = Contact.OrderBy(s => s.Email);
+
+                    }
+
+                    break;
+                case "手機":
+                    if (type == "Desc")
+                    {
+                        Contact = Contact.OrderByDescending(s => s.手機);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Contact = Contact.OrderBy(s => s.手機);
+                    }
+
+                    break;
+                case "電話":
+                    if (type == "Desc")
+                    {
+                        Contact = Contact.OrderByDescending(s => s.電話);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Contact = Contact.OrderBy(s => s.電話);
+                    }
+
+                    break;
+              
+                default:
+                    Contact = Contact.OrderBy(s => s.Id);
+                    break;
+            }
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            return View("Index", Contact.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: 客戶聯絡人
-        public ActionResult Index()
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult Index(int? Page)
         {
             //var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料);
             //return View(客戶聯絡人.ToList());
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
 
-            var Contact = repo.All();
-            var ClientFilter = RepositoryHelper.Get客戶聯絡人Repository();
-            ViewBag.職稱 = new SelectList(ClientFilter.All().Distinct(), "職稱", "職稱"); 
+            var Contact = repo.All().OrderBy(P => P.Id).ToPagedList(pageNumber, pageSize);
+
+            List<客戶聯絡人> Title = this.GetTitles();
+            ViewData["職稱"] = new SelectList(Title, "職稱", "職稱");
+
+
+            //var ClientFilter = RepositoryHelper.Get客戶聯絡人Repository();
+            //ViewBag.職稱 = new SelectList(ClientFilter.All().Distinct(), "職稱", "職稱"); 
+
             return View(Contact);
         }
 
+        [ActFilter]
+        [ViewFilter]
         public ActionResult ExportExcel()
         {
             // var workbook = new XLWorkbook();
@@ -61,7 +163,10 @@ namespace MVC5Course.Controllers
             workbook.SaveAs(Server.MapPath("~/App_Data/Export.xlsx"));
             return File(Server.MapPath("~/App_Data/Export.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
-        public ActionResult Search(string KeyWord)
+
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult Search(string KeyWord, int? Page)
         {
             //var client = db.客戶聯絡人.AsQueryable();
 
@@ -71,21 +176,33 @@ namespace MVC5Course.Controllers
 
             //}
             //return View("Index", client);
-            var Contact = repo.客戶名稱(KeyWord);
-            var ClientFilter = RepositoryHelper.Get客戶聯絡人Repository();
-            ViewBag.職稱 = new SelectList(ClientFilter.All().Distinct(), "職稱", "職稱");
+            List<客戶聯絡人> Title = this.GetTitles();
+            ViewData["職稱"] = new SelectList(Title, "職稱", "職稱");
+
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            var Contact = repo.客戶名稱(KeyWord).ToPagedList(pageNumber, pageSize);
+          
             return View("Index", Contact);
         }
 
-        public ActionResult Filter(string 職稱)
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult Filter(string 職稱,int? Page)
         {
-            var Contact = repo.職稱 (職稱);
-            var ClientFilter = RepositoryHelper.Get客戶聯絡人Repository();
-            ViewBag.職稱 = new SelectList(ClientFilter.All().Distinct(), "職稱", "職稱");
+
+            List<客戶聯絡人> Title = this.GetTitles();
+            ViewData["職稱"] = new SelectList(Title, "職稱", "職稱");
+
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            var Contact = repo.職稱(職稱).ToPagedList(pageNumber, pageSize);
             return View("Index", Contact);
         }
 
         // GET: 客戶聯絡人/Details/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -105,6 +222,8 @@ namespace MVC5Course.Controllers
         }
 
         // GET: 客戶聯絡人/Create
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Create()
         {
            // ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
@@ -119,6 +238,8 @@ namespace MVC5Course.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Create([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話,是否已刪除")] 客戶聯絡人 客戶聯絡人)
         {
             if (ModelState.IsValid)
@@ -137,6 +258,8 @@ namespace MVC5Course.Controllers
         }
 
         // GET: 客戶聯絡人/Edit/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -163,6 +286,8 @@ namespace MVC5Course.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Edit([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話,是否已刪除")] 客戶聯絡人 客戶聯絡人)
         {
             if (ModelState.IsValid)
@@ -181,6 +306,8 @@ namespace MVC5Course.Controllers
         }
 
         // GET: 客戶聯絡人/Delete/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -200,6 +327,8 @@ namespace MVC5Course.Controllers
         // POST: 客戶聯絡人/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult DeleteConfirmed(int id)
         {
             //客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
@@ -220,6 +349,37 @@ namespace MVC5Course.Controllers
                // db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [HttpPost]
+        [ActFilter]
+        [ViewFilter ]
+        [HandleError(ExceptionType = typeof(DbEntityValidationException), View = "ErrorCustom")]
+        public ActionResult BatchUpdate(ContactBatch[]  Data)
+        {
+           
+
+            List<客戶聯絡人> Title = this.GetTitles();
+            ViewData["職稱"] = new SelectList(Title, "職稱", "職稱");
+
+            if (ModelState.IsValid)
+            {
+                foreach (var Contact in Data)
+                {
+                    var ContactInfo = repo.Find(Contact.Id );
+                    ContactInfo.職稱  = Contact.職稱;
+                    ContactInfo.手機  = Contact.手機;
+                    ContactInfo.電話  = Contact.電話;
+                }
+
+                repo.UnitOfWork.Commit();
+
+                return RedirectToAction("Index");
+            }
+
+            ViewData.Model = repo.All();
+
+            return View("Index");
         }
     }
 }

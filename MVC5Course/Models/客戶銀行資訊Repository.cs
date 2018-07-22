@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using X.PagedList;
 
 namespace MVC5Course.Models
 {
@@ -15,7 +16,7 @@ namespace MVC5Course.Models
 
 
 
-        public IQueryable Sort(string Field, string Type)
+        public IQueryable Sort(string Field, string Type,int Page)
         {
             var param = Expression.Parameter(typeof(客戶銀行資訊), "");
             var orderExpression = Expression.Lambda<Func<客戶銀行資訊, object>>(Expression.Property(param, Field), param);

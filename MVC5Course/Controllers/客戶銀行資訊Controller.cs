@@ -8,28 +8,121 @@ using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MVC5Course.Models;
+using X.PagedList;
 
 namespace MVC5Course.Controllers
 {
+    
+
     public class 客戶銀行資訊Controller : Controller
     {
-       // private 客戶資料Entities db = new 客戶資料Entities();
+        //private 客戶資料Entities db = new 客戶資料Entities();
         客戶銀行資訊Repository repo = RepositoryHelper.Get客戶銀行資訊Repository();
+        private int pageSize = 5;
 
-        public ActionResult FieldSort(string field, string type)
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult FieldSort(string field, string type, int? Page)
         {
-            var Bank = repo.Sort(field, type);
-            return View("Index", Bank);
+            // var Bank = repo.Sort(field, type,Page);
+            //return View("Index", Bank);
+
+            var Bank = repo.All();
+
+            switch (field)
+            {
+                case "客戶Id":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.客戶Id);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.客戶Id);
+                    }
+
+                    break;
+                case "銀行名稱":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.銀行名稱);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.銀行名稱);
+                    }
+
+                    break;
+                case "銀行代碼":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.銀行代碼);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.銀行代碼);
+
+                    }
+
+                    break;
+                case "分行代碼":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.分行代碼);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.分行代碼);
+                    }
+
+                    break;
+                case "帳戶名稱":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.帳戶名稱);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.帳戶名稱);
+                    }
+
+                    break;
+                case "帳戶號碼":
+                    if (type == "Desc")
+                    {
+                        Bank = Bank.OrderByDescending(s => s.帳戶號碼);
+                    }
+                    else if (type == "Asc")
+                    {
+                        Bank = Bank.OrderBy(s => s.帳戶號碼);
+                    }
+
+                    break;
+                default:
+                    Bank = Bank.OrderBy(s => s.Id);
+                    break;
+            }
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            return View("Index", Bank.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: 客戶銀行資訊
-        public ActionResult Index()
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult Index(int? Page)
         {
             //var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
-            var Bank = repo.All(); 
-            return View(Bank.ToList());
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            var Bank = repo.All().OrderBy(P => P.客戶Id).ToPagedList(pageNumber, pageSize);
+          // var  Bank = db.客戶銀行資訊.Include(客 => 客.客戶資料).ToPagedList(Page, pageSize); ;
+            //return View(Bank.ToList());
+            return View(Bank);
         }
 
+        [ActFilter]
+        [ViewFilter]
         public ActionResult ExportExcel()
         {
             // var workbook = new XLWorkbook();
@@ -56,7 +149,9 @@ namespace MVC5Course.Controllers
             return File(Server.MapPath("~/App_Data/Export.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        public ActionResult Search(string KeyWord)
+        [ActFilter]
+        [ViewFilter]
+        public ActionResult Search(string KeyWord, int? Page)
         {
             //var client = db.客戶銀行資訊.AsQueryable();
 
@@ -65,13 +160,16 @@ namespace MVC5Course.Controllers
             //    client = client.Where(P => P.銀行名稱 .Contains(KeyWord));
 
             //}
-
-            var Bank = repo.銀行名稱(KeyWord);
+            var pageNumber = Page ?? 1;
+            ViewBag.CurrPage = pageNumber;
+            var Bank = repo.銀行名稱(KeyWord).ToPagedList(pageNumber, pageSize); 
             return View("Index", Bank);
        
         }
 
         // GET: 客戶銀行資訊/Details/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -90,6 +188,8 @@ namespace MVC5Course.Controllers
         }
 
         //GET: 客戶銀行資訊/Create
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Create()
         {
             //ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
@@ -105,6 +205,8 @@ namespace MVC5Course.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Create([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼,是否已刪除")] 客戶銀行資訊 客戶銀行資訊)
         {
             if (ModelState.IsValid)
@@ -127,6 +229,8 @@ namespace MVC5Course.Controllers
         }
 
         // GET: 客戶銀行資訊/Edit/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -153,6 +257,8 @@ namespace MVC5Course.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Edit([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼,是否已刪除")] 客戶銀行資訊 客戶銀行資訊)
         {
             if (ModelState.IsValid)
@@ -173,6 +279,8 @@ namespace MVC5Course.Controllers
         }
 
         // GET: 客戶銀行資訊/Delete/5
+        [ActFilter]
+        [ViewFilter]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -193,6 +301,8 @@ namespace MVC5Course.Controllers
         // POST: 客戶銀行資訊/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [ActFilter]
+        [ViewFilter]
         public ActionResult DeleteConfirmed(int id)
         {
             //客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
