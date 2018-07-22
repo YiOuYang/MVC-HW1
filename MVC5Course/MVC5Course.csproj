@@ -516,10 +516,12 @@
     <Content Include="Views\客戶資料\_MetroLayout.cshtml" />
     <Content Include="Views\客戶銀行資訊\_MetroLayout.cshtml" />
     <Content Include="Views\客戶聯絡人\_MetroLayout.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Tel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Shared\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

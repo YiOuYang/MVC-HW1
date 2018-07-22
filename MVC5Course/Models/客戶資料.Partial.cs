@@ -25,6 +25,7 @@ namespace MVC5Course.Models
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
         [Required]
+        [UIHint("Tel")]
         public string 電話 { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
