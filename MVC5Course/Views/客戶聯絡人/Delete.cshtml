@@ -1,4 +1,10 @@
-﻿@model MVC5Course.Models.客戶聯絡人
+﻿@{
+    Layout = "_MetroLayout.cshtml";
+}
+@section breadcrumb{
+    @Html.ActionLink("Delete", "Delete", "客戶聯絡人") @*用render section 產生內容給Layout*@
+}
+@model MVC5Course.Models.客戶聯絡人
 
 @{
     ViewBag.Title = "Delete";
@@ -61,7 +67,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

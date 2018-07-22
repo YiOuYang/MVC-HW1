@@ -1,4 +1,10 @@
-﻿@model MVC5Course.Models.客戶資料
+﻿@{
+    Layout = "_MetroLayout.cshtml";
+}
+@section breadcrumb{
+    @Html.ActionLink("Details", "Details", "客戶資料") @*用render section 產生內容給Layout*@
+}
+@model MVC5Course.Models.客戶資料
 
 @{
     ViewBag.Title = "Details";

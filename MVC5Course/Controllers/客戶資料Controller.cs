@@ -230,8 +230,8 @@ namespace MVC5Course.Controllers
         [ViewFilter]
         public ActionResult Create()
         {
-            var Client = RepositoryHelper.Get客戶資料Repository();
-            ViewBag.客戶分類 = new SelectList(Client.All().Distinct() , "客戶分類", "客戶分類");
+            List<客戶資料> Title = GetCata();
+            ViewData["客戶分類"] = new SelectList(Title, "客戶分類", "客戶分類");
             return View();
         }
 
@@ -264,8 +264,8 @@ namespace MVC5Course.Controllers
             {
                 return HttpNotFound();
             }
-            var Client = RepositoryHelper.Get客戶資料Repository();
-            ViewBag.客戶分類 = new SelectList(Client.All().Distinct( ), "客戶分類", "客戶分類", client.客戶分類  );
+            List<客戶資料> Title = GetCata();
+            ViewData["客戶分類"] = new SelectList(Title, "客戶分類", "客戶分類");
             return View(client);
         }
 

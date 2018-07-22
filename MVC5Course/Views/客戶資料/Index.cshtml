@@ -1,4 +1,11 @@
-﻿@using X.PagedList.Mvc;
+﻿@{
+    Layout = "_MetroLayout.cshtml";
+}
+@section breadcrumb{
+    @Html.ActionLink("Index", "Index", "客戶資料") @*用render section 產生內容給Layout*@
+}
+
+@using X.PagedList.Mvc;
 @using X.PagedList;
 @model IEnumerable<MVC5Course.Models.客戶資料>
 

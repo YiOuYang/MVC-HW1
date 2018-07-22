@@ -1,4 +1,11 @@
-﻿@using X.PagedList.Mvc;
+﻿@{
+    Layout = "_MetroLayout.cshtml";
+}
+@section breadcrumb{
+    @Html.ActionLink("Index", "Index", "客戶銀行資訊") @*用render section 產生內容給Layout*@
+}
+
+@using X.PagedList.Mvc;
 @using X.PagedList;
 
 @model IEnumerable<MVC5Course.Models.客戶銀行資訊>
@@ -27,7 +34,7 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.銀行名稱)
-            @Html.ActionLink("Desc", "FieldSort", new { Field = "銀行名稱", type = "Desc",page= ViewBag.CurrPage })
+            @Html.ActionLink("Desc", "FieldSort", new { Field = "銀行名稱", type = "Desc", page = ViewBag.CurrPage })
             @Html.ActionLink("Asc", "FieldSort", new { Field = "銀行名稱", type = "Asc", page = ViewBag.CurrPage })
         </th>
         <th>
