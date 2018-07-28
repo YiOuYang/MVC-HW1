@@ -176,10 +176,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\ActFilterAttribute.cs" />
+    <Compile Include="Models\ClientAuth.cs" />
+    <Compile Include="Models\Filter\ActFilterAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ViewFilterAttribute.cs" />
+    <Compile Include="Models\Filter\ViewFilterAttribute.cs" />
     <Compile Include="Controllers\客戶聯絡人Controller.cs" />
     <Compile Include="Controllers\客戶資料Controller.cs" />
     <Compile Include="Controllers\客戶銀行資訊Controller.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Models\RepositoryHelper.cs">
       <DependentUpon>IRepository.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserLoginEdit.cs" />
     <Compile Include="Models\View_Count.cs">
       <DependentUpon>客戶資料.tt</DependentUpon>
     </Compile>
@@ -517,6 +519,8 @@
     <Content Include="Views\客戶銀行資訊\_MetroLayout.cshtml" />
     <Content Include="Views\客戶聯絡人\_MetroLayout.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Tel.cshtml" />
+    <Content Include="Views\客戶資料\LoginPage.cshtml" />
+    <Content Include="Views\客戶資料\LoginUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

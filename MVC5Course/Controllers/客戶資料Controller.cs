@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using ClosedXML.Excel;
 using MVC5Course.Models;
 using X.PagedList;
@@ -31,6 +32,86 @@ namespace MVC5Course.Controllers
                 _Cata.Add(new 客戶資料 { 客戶分類 = c.ToString() });
             }
             return _Cata;
+        }
+
+
+
+        public ActionResult LoginPage(ClientAuth clientAuth)
+        {
+            if (clientAuth.帳號 != null && clientAuth.密碼 != null && ModelState.IsValid)
+            {
+                var client = repo.ClientLogin(clientAuth);
+
+                if (client != null)
+                {
+                    string strUsername = client.FirstOrDefault().Id .ToString (); 
+
+                    FormsAuthentication.RedirectFromLoginPage(strUsername, false);
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        ViewBag.Msg = "您現在是已登入狀態。";
+                                       }
+                    else
+                    {
+                        ViewBag.Msg = "登入失敗。";
+                                          }
+                   
+                }
+                else
+                {
+                    ViewBag.Msg = "帳密錯誤";
+                    return View("LoginPage");
+                }
+            }
+            ViewBag.Msg = "請登入";
+            return View("LoginPage");
+        }
+
+        public ActionResult LoginUser()
+        {
+            ViewBag.Msg=  User.Identity.Name;
+            if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                var client = repo.Find(Convert.ToInt32(User.Identity.Name));
+
+
+                
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(client.密碼);
+                string Base64Pass = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(client.密碼));
+                client.密碼 = Base64Pass;
+                return View("LoginUser", client);
+            }
+            else
+            {
+                ViewBag.Msg = "請登入";
+                return View("LoginPage");
+            }
+        }
+
+        public ActionResult UserLoginEdit(UserLoginEdit userLoginEdit)
+        {
+            if ( ModelState.IsValid)
+            {
+                var client = repo.Find(userLoginEdit.Id);
+
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(userLoginEdit.密碼);
+                string Base64Pass = Convert.ToBase64String(bytes);
+
+                client.密碼 = Base64Pass;
+                client.電話 = userLoginEdit.電話;
+                client.傳真 = userLoginEdit.傳真;
+                client.地址 = userLoginEdit.地址;
+                repo.UnitOfWork.Commit();
+                return RedirectToAction("Index");
+            }
+                return View();
+        }
+
+        public ActionResult SignOut()
+        {
+            FormsAuthentication.SignOut();
+            return View("LoginPage");
+           
         }
 
         [ActFilter]

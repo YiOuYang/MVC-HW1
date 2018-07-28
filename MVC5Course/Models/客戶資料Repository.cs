@@ -52,6 +52,20 @@ namespace MVC5Course.Models
             return client;
         }
 
+        public IQueryable<客戶資料> ClientLogin(ClientAuth clientAuth)
+        {
+            var client = this.All();
+
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(clientAuth.密碼);
+            string Base64Pass = Convert.ToBase64String(bytes);
+
+            client = client.Where(p => p.帳號== clientAuth.帳號 && p.密碼== Base64Pass );
+
+         
+
+            return client;
+        }
+
         public IQueryable <客戶資料> 客戶分類(string KeyWord)
         {
             var client = this.All();

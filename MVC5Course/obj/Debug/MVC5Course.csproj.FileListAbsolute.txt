@@ -339,4 +339,3 @@ C:\Users\OuYangYi\Desktop\MVC HW2\MVC5Course\obj\Debug\MVC5Course.csproj.CoreCom
 C:\Users\OuYangYi\Desktop\MVC HW2\MVC5Course\obj\Debug\MVC5Course.csproj.CopyComplete
 C:\Users\OuYangYi\Desktop\MVC HW2\MVC5Course\obj\Debug\MVC5Course.dll
 C:\Users\OuYangYi\Desktop\MVC HW2\MVC5Course\obj\Debug\MVC5Course.pdb
-C:\Users\OuYangYi\Desktop\MVC HW2\MVC5Course\obj\Debug\MVC5Course.csprojAssemblyReference.cache

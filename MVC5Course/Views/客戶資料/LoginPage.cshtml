@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+@model MVC5Course.Models.ClientAuth
+<h2>   @ViewBag.Msg </h2>
+
+<p>
+    @using (Html.BeginForm("LoginPage", "客戶資料", FormMethod.Get, null))
+    {
+        
+        @Html.TextBox("帳號", null, new { placeholder = "請輸入帳號" });
+        <br>
+        @Html.TextBox("密碼", null, new { placeholder = "請輸入密碼" });
+        <input type="submit" value="登入"/>
+     
+    }
+</p>
